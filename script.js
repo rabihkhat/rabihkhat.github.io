@@ -37,7 +37,7 @@
 let validEntries = [];
 
 async function loadEntries() {
-  const CSV_URL = "YOUR_PUBLISHED_CSV_LINK_HERE"; // <- paste here
+  const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRj0yrXpnSGjteWybJAiv71i2elpcmv9L1iZOGA1XSxkuKNFiQw6QesxMPBULWyZzX3zc4NhGu2fLmn/pub?output=csv"; // <- paste here
 
   try {
     const response = await fetch(CSV_URL);
