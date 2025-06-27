@@ -1,8 +1,3 @@
-
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,8 +12,6 @@
     integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
     crossorigin="anonymous"
   />
-
-
 
   <!-- PapaParse for CSV parsing -->
   <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
@@ -36,14 +29,25 @@
     <h2 id="winner" class="text-center mb-3">No winner yet</h2>
 
     <!-- Dropdown container, hidden until entries are loaded -->
-    <div id="dropdownContainer" class="d-none">
-      <label for="entriesDropdown" class="form-label text-center d-block">
-        All Valid Entrants
-      </label>
-      <select id="entriesDropdown" class="form-select mx-auto w-75"></select>
+    <div id="dropdownContainer" class="text-center mt-3 d-none">
+      <div class="dropdown">
+        <button
+          id="dropdownToggle"
+          class="btn btn-outline-secondary dropdown-toggle"
+          type="button"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          Show valid entrants
+        </button>
+        <ul id="entriesDropdown" class="dropdown-menu"></ul>
+      </div>
     </div>
 
   </div>
+
+  <!-- Bootstrap 5 JS bundle (for dropdown behavior) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
     let validEntries = [];
@@ -90,22 +94,22 @@
 
     function populateDropdown() {
       const container = document.getElementById("dropdownContainer");
-      const select = document.getElementById("entriesDropdown");
+      const list = document.getElementById("entriesDropdown");
 
-      // clear old options
-      select.innerHTML = "";
+      // clear old items
+      list.innerHTML = "";
 
-      // add one <option> per valid entry
-      validEntries.forEach((row, idx) => {
-        const opt = document.createElement("option");
-        opt.value = idx;
-        opt.textContent = `${row["Name"]} (${row["Email Address"]})`;
-        select.append(opt);
+      // add one <li><span> per valid entry
+      validEntries.forEach((row) => {
+        const li = document.createElement("li");
+        li.innerHTML = `<span class="dropdown-item-text">
+                          ${row["Name"]} (${row["Email Address"]})
+                        </span>`;
+        list.append(li);
       });
 
       // show the dropdown
       container.classList.remove("d-none");
-      container.classList.add("d-block");
     }
 
     // wire up buttons
