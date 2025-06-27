@@ -1,47 +1,32 @@
 let validEntries = [];
 
 async function loadEntries() {
-  console.log("Loading entries...");
-
-  const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRj0yrXpnSGjteWybJAiv71i2elpcmv9L1iZOGA1XSxkuKNFiQw6QesxMPBULWyZzX3zc4NhGu2fLmn/pub?output=csv";
-
+  const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRj0yrXpnSGjteWybJAiv71i2elpcmv9L1iZOGA1XSxkuKNFiQw6QesxMPBULWyZzX3zc4NhGu2fLmn/pub?gid=0&single=true&output=csv";
   try {
     const response = await fetch(CSV_URL);
-    const text = await response.text();
+    const csvText = await response.text();
 
-    const rows = text.trim().split("\n").map(row =>
-      row.split(",").map(cell => cell.replace(/"/g, "").trim())
-    );
-
-    const headers = rows[0];
-    const data = rows.slice(1).map(row => {
-      const obj = {};
-      headers.forEach((header, index) => {
-        obj[header] = row[index] || "";
-      });
-      return obj;
+    // PapaParse will handle quotes/commas/newlines properly
+    const parsed = Papa.parse(csvText, {
+      header: true,
+      skipEmptyLines: true,
     });
 
-    validEntries = data.filter(row =>
+    // Check for parse errors
+    if (parsed.errors.length) {
+      console.error("CSV parse errors:", parsed.errors);
+      alert("Spreadsheet parsed with errors—see console.");
+      return;
+    }
+
+    // Filter out “Yes”
+    validEntries = parsed.data.filter(row =>
       row["Are you a DJ, Vendor or Performer at Gamer Rave?"] !== "Yes"
     );
 
     alert(`Loaded ${validEntries.length} valid guest entries.`);
-  } catch (error) {
-    console.error("Error fetching or processing CSV:", error);
+  } catch (err) {
+    console.error("Fetch or parse failed:", err);
     alert("Failed to load the spreadsheet.");
   }
-}
-
-function pickWinner() {
-  if (validEntries.length === 0) {
-    alert("No valid entries loaded. Please click 'Load Entries' first.");
-    return;
-  }
-
-  const winner = validEntries[Math.floor(Math.random() * validEntries.length)];
-  const name = winner["Name"] || "Unnamed";
-  const email = winner["Email Address"] || "No Email";
-
-  document.getElementById("winner").innerText = `🎉 Winner: ${name} (${email})`;
 }
