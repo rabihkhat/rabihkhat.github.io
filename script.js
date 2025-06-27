@@ -37,18 +37,23 @@
 let validEntries = [];
 
 async function loadEntries() {
-  const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRj0yrXpnSGjteWybJAiv71i2elpcmv9L1iZOGA1XSxkuKNFiQw6QesxMPBULWyZzX3zc4NhGu2fLmn/pub?output=csv"; // <- paste here
+  console.log("Loading entries...");
+
+  const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRj0yrXpnSGjteWybJAiv71i2elpcmv9L1iZOGA1XSxkuKNFiQw6QesxMPBULWyZzX3zc4NhGu2fLmn/pub?output=csv";
 
   try {
     const response = await fetch(CSV_URL);
     const text = await response.text();
 
-    const rows = text.split("\n").map(row => row.split(","));
-    const headers = rows[0].map(h => h.trim().replace(/"/g, ''));
+    const rows = text.trim().split("\n").map(row =>
+      row.split(",").map(cell => cell.replace(/"/g, "").trim())
+    );
+
+    const headers = rows[0];
     const data = rows.slice(1).map(row => {
-      let obj = {};
-      headers.forEach((h, i) => {
-        obj[h] = (row[i] || "").trim().replace(/"/g, '');
+      const obj = {};
+      headers.forEach((header, index) => {
+        obj[header] = row[index] || "";
       });
       return obj;
     });
@@ -57,20 +62,16 @@ async function loadEntries() {
       row["Are you a DJ, Vendor or Performer at Gamer Rave?"]?.toLowerCase() !== "yes"
     );
 
-    if (validEntries.length === 0) {
-      alert("No valid guest entries found.");
-    } else {
-      alert(`Loaded ${validEntries.length} valid guests.`);
-    }
-  } catch (err) {
-    console.error("Failed to load CSV", err);
-    alert("Error loading spreadsheet. Check your URL or sheet publishing settings.");
+    alert(`Loaded ${validEntries.length} valid guest entries.`);
+  } catch (error) {
+    console.error("Error fetching or processing CSV:", error);
+    alert("Failed to load the spreadsheet.");
   }
 }
 
 function pickWinner() {
   if (validEntries.length === 0) {
-    alert("Please load entries first.");
+    alert("No valid entries loaded. Please click 'Load Entries' first.");
     return;
   }
 
