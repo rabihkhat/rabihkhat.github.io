@@ -1,32 +1,14 @@
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Gamer Rave Giveaway 4</title>
-  <!-- Load PapaParse first -->
-  <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
-  <!-- Then your app logic -->
-  <script defer src="script.js"></script>
-</head>
-<body>
-  <h1>🎮 Gamer Rave Giveaway</h1>
-
-  <button onclick="loadEntries()">Load Entries</button>
-  <button onclick="pickWinner()">Pick a Winner</button>
-
-  <h2 id="winner">No winner yet</h2>
-</body>
-</html>
-
-
-
-
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Gamer Rave Giveaway 3</title>
+  <title>Gamer Rave Giveaway 4</title>
 
   <!-- Bootstrap 5 CSS -->
   <link
@@ -67,7 +49,7 @@
     let validEntries = [];
 
     async function loadEntries() {
-      const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRj0yrXpnSGjteWybJAiv71i2elpcmv9L1iZOGA1XSxkuKNFiQw6QesxMPBULWyZzX3zc4NhGu2fLmn/gviz/tq?tqx=out:csv&gid=2124022789";
+      const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRj0yrXpnSGjteWybJAiv71i2elpcmv9L1iZOGA1XSxkuKNFiQw6QesxMPBULWyZzX3zc4NhGu2fLmn/pub?gid=2124022789&single=true&output=csv";
       try {
         const resp = await fetch(CSV_URL);
         const text = await resp.text();
@@ -133,4 +115,4 @@
     });
   </script>
 </body>
-</html> -->
+</html>
