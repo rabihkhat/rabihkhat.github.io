@@ -1,62 +1,39 @@
 let validEntries = [];
 
 async function loadEntries() {
-  const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRj0yrXpnSGjteWybJAiv71i2elpcmv9L1iZOGA1XSxkuKNFiQw6QesxMPBULWyZzX3zc4NhGu2fLmn/pub?output=csv";
-  const debugEl = document.getElementById("debug");
-  debugEl.textContent = "";
+  const XLSX_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRj0yrXpnSGjteWybJAiv71i2elpcmv9L1iZOGA1XSxkuKNFiQw6QesxMPBULWyZzX3zc4NhGu2fLmn/pub?output=xlsx";
 
   try {
-    // 1) Fetch
-    const response = await fetch(CSV_URL);
-    const text = await response.text();
+    // 1) Fetch the binary
+    const resp = await fetch(XLSX_URL);
+    const buf = await resp.arrayBuffer();
 
-    // 2) Parse
-    const result = Papa.parse(text, {
-      header: true,
-      skipEmptyLines: true
-    });
-    const data = result.data;
+    // 2) Parse with SheetJS
+    const wb = XLSX.read(buf, { type: 'array' });
+    const sheet = wb.Sheets[wb.SheetNames[0]];
+    const data = XLSX.utils.sheet_to_json(sheet, { defval: "" });
 
-    // 3) Debug: show first 5 rows raw
-    debugEl.textContent += "=== First 5 rows raw data ===\n";
-    data.slice(0,5).forEach((row,i) => {
-      debugEl.textContent += `Row ${i+1}: ` +
-        JSON.stringify(row["Are you a DJ, Vendor or Performer at Gamer Rave?"], null, 0) +
-        "\n";
-    });
-    debugEl.textContent += "\n";
-
-    // 4) Filter
-    validEntries = data.filter((row, idx) => {
+    // 3) Filter out any “yes” (case-/whitespace-insensitive)
+    validEntries = data.filter(row => {
       const raw = row["Are you a DJ, Vendor or Performer at Gamer Rave?"];
-      const cleaned = (raw||"")
-        .replace(/[\r\n]+/g, "")
-        .trim()
-        .toLowerCase();
-
-      // Debug each row decision
-      debugEl.textContent += `Row ${idx+1}: raw='${raw}' → cleaned='${cleaned}' → ` +
-        (cleaned === "yes" ? "EXCLUDE\n" : "KEEP\n");
-
-      return cleaned !== "yes";
+      const clean = String(raw).trim().toLowerCase();
+      return clean !== "yes";
     });
 
-    debugEl.textContent += `\n✅ ${validEntries.length} valid entries after filter\n`;
-    alert(`Loaded ${validEntries.length} valid guest entries.`);
+    alert(`✅ Loaded ${validEntries.length} valid guest entries.`);
   } catch (err) {
     console.error(err);
-    alert("Failed to load or parse the CSV. See console for details.");
+    alert("❌ Failed to load or parse the spreadsheet.");
   }
 }
 
 function pickWinner() {
-  if (validEntries.length === 0) {
-    alert("No valid entries loaded. Please click 'Load Entries' first.");
-    return;
+  if (!validEntries.length) {
+    return alert("Load entries first!");
   }
-  const winner = validEntries[Math.floor(Math.random() * validEntries.length)];
-  const name = winner["Name"] || "Unnamed";
-  const email = winner["Email Address"] || "No Email";
+  const w = validEntries[Math.floor(Math.random() * validEntries.length)];
+  const name  = w["Name"]          || "Unnamed";
+  const email = w["Email Address"] || "No Email";
   document.getElementById("winner").innerText =
     `🎉 Winner: ${name} (${email})`;
 }
