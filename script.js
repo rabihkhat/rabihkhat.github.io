@@ -1,39 +1,51 @@
+// 🎉 Giveaway Script — Version 2.0 (updated filter & email fix)
+
 let validEntries = [];
 
-async function loadEntries() {
-  const XLSX_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRj0yrXpnSGjteWybJAiv71i2elpcmv9L1iZOGA1XSxkuKNFiQw6QesxMPBULWyZzX3zc4NhGu2fLmn/pub?output=xlsx";
+document.getElementById('fileUpload').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (!file) return alert("Please upload a spreadsheet");
 
-  try {
-    // 1) Fetch the binary
-    const resp = await fetch(XLSX_URL);
-    const buf = await resp.arrayBuffer();
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const data = new Uint8Array(e.target.result);
+    const workbook = XLSX.read(data, { type: 'array' });
+    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+    const jsonData = XLSX.utils.sheet_to_json(firstSheet, { defval: "" });
 
-    // 2) Parse with SheetJS
-    const wb = XLSX.read(buf, { type: 'array' });
-    const sheet = wb.Sheets[wb.SheetNames[0]];
-    const data = XLSX.utils.sheet_to_json(sheet, { defval: "" });
-
-    // 3) Filter out any “yes” (case-/whitespace-insensitive)
-    validEntries = data.filter(row => {
-      const raw = row["Are you a DJ, Vendor or Performer at Gamer Rave?"];
-      const clean = String(raw).trim().toLowerCase();
-      return clean !== "yes";
+    // Robust "yes" filter
+    validEntries = jsonData.filter(row => {
+      const answer = row["Are you a DJ, Vendor or Performer at Gamer Rave?"]
+        .toString()
+        .replace(/[\r\n]+/g, "")  // strip CR/LF
+        .trim()
+        .toLowerCase();
+      return answer !== "yes";
     });
 
-    alert(`✅ Loaded ${validEntries.length} valid guest entries.`);
-  } catch (err) {
-    console.error(err);
-    alert("❌ Failed to load or parse the spreadsheet.");
-  }
-}
+    if (validEntries.length === 0) {
+      alert("No valid guest entries found.");
+    } else {
+      alert(`Version 2.0 loaded ${validEntries.length} valid guests.`);
+    }
+  };
+  reader.readAsArrayBuffer(file);
+});
 
 function pickWinner() {
-  if (!validEntries.length) {
-    return alert("Load entries first!");
+  if (validEntries.length === 0) {
+    alert("Upload a valid spreadsheet first!");
+    return;
   }
-  const w = validEntries[Math.floor(Math.random() * validEntries.length)];
-  const name  = w["Name"]          || "Unnamed";
-  const email = w["Email Address"] || "No Email";
-  document.getElementById("winner").innerText =
-    `🎉 Winner: ${name} (${email})`;
+  const winner = validEntries[
+    Math.floor(Math.random() * validEntries.length)
+  ];
+  // Try both common email headers
+  const email = winner.Email
+    || winner["Email Address"]
+    || winner["Email Address "]
+    || "No Email";
+
+  document.getElementById('winner').innerText =
+    `🎉 Winner (v2.0): ${winner.Name || "Unnamed"} (${email})`;
 }
