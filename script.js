@@ -1,33 +1,24 @@
 let validEntries = [];
 
 async function loadEntries() {
-  console.log("Loading entries...");
-
   const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRj0yrXpnSGjteWybJAiv71i2elpcmv9L1iZOGA1XSxkuKNFiQw6QesxMPBULWyZzX3zc4NhGu2fLmn/pub?output=csv";
 
   try {
     const response = await fetch(CSV_URL);
     const text = await response.text();
 
-    const rows = text.trim().split("\n").map(row =>
-      row.split(",").map(cell => cell.replace(/"/g, "").trim())
-    );
-
-    const headers = rows[0];
-    const data = rows.slice(1).map(row => {
-      const obj = {};
-      headers.forEach((header, index) => {
-        obj[header] = row[index] || "";
-      });
-      return obj;
+    // Parse CSV properly using PapaParse
+    const result = Papa.parse(text, {
+      header: true,
+      skipEmptyLines: true
     });
 
-    validEntries = data.filter(row => {
-      const answer = (row["Are you a DJ, Vendor or Performer at Gamer Rave?"] || "")
-        .replace(/[\r\n]+/g, "")
-        .trim()
-        .toLowerCase();
+    const data = result.data;
 
+    validEntries = data.filter(row => {
+      const rawAnswer = row["Are you a DJ, Vendor or Performer at Gamer Rave?"];
+      if (!rawAnswer) return true; // if blank, let it pass
+      const answer = rawAnswer.trim().toLowerCase();
       return answer !== "yes";
     });
 
@@ -37,14 +28,14 @@ async function loadEntries() {
       alert(`Loaded ${validEntries.length} valid guest entries.`);
     }
   } catch (error) {
-    console.error("Error fetching or processing CSV:", error);
-    alert("Failed to load the spreadsheet.");
+    console.error("Failed to fetch or parse CSV:", error);
+    alert("Error loading spreadsheet.");
   }
 }
 
 function pickWinner() {
   if (validEntries.length === 0) {
-    alert("No valid entries loaded. Please click 'Load Entries' first.");
+    alert("Please load entries first.");
     return;
   }
 
