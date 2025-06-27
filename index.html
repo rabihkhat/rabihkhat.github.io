@@ -2,13 +2,18 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Gamer Rave Giveaway 2</title>
+  <title>Gamer Rave Giveaway 3</title>
+  <!-- Load PapaParse first -->
+  <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
+  <!-- Then your app logic -->
   <script defer src="script.js"></script>
 </head>
 <body>
   <h1>🎮 Gamer Rave Giveaway</h1>
+
   <button onclick="loadEntries()">Load Entries</button>
   <button onclick="pickWinner()">Pick a Winner</button>
+
   <h2 id="winner">No winner yet</h2>
 </body>
 </html>
