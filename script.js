@@ -23,8 +23,12 @@ async function loadEntries() {
     });
 
     validEntries = data.filter(row => {
-      const answer = row["Are you a DJ, Vendor or Performer at Gamer Rave?"] || "";
-      return answer.trim().toLowerCase() !== "yes";
+      const answer = (row["Are you a DJ, Vendor or Performer at Gamer Rave?"] || "")
+        .replace(/[\r\n]+/g, "")
+        .trim()
+        .toLowerCase();
+
+      return answer !== "yes";
     });
 
     if (validEntries.length === 0) {
