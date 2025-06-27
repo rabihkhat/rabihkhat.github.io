@@ -1,109 +1,14 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Gamer Rave Giveaway Picker</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-  <script defer src="script.js"></script>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <h1>🎮 Gamer Rave Giveaway</h1>
-  <p>Upload the responses spreadsheet:</p>
-  <input type="file" id="fileUpload" accept=".xlsx" />
-  <button onclick="pickWinner()">Pick a Winner</button>
-  <h2 id="winner"></h2>
-</body>
-</html> -->
-
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Gamer Rave Giveaway</title>
-  <script defer src="script.js"></script>
-</head>
-<body>
-  <h1>🎮 Gamer Rave Giveaway</h1>
-  <button onclick="loadEntries()">Load Entries</button>
-  <button onclick="pickWinner()">Pick a Winner</button>
-  <h2 id="winner">No winner yet</h2>
-</body>
-</html> -->
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>Gamer Rave Giveaway</title>
   <script defer src="script.js"></script>
-  <style>
-    body { font-family: sans-serif; text-align: center; margin-top: 50px; }
-    button { padding: 8px 12px; margin: 5px; font-size: 1rem; }
-    #winner { margin-top: 30px; color: green; font-weight: bold; }
-  </style>
 </head>
 <body>
   <h1>🎮 Gamer Rave Giveaway</h1>
-  <button onclick="loadEntries()">Load Entries (CSV)</button>
+  <button onclick="loadEntries()">Load Entries</button>
   <button onclick="pickWinner()">Pick a Winner</button>
   <h2 id="winner">No winner yet</h2>
 </body>
 </html>
-
-
-
-
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Gamer Rave Giveaway V2</title>
-
-  <!-- PapaParse for robust CSV parsing -->
-  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-  <script defer src="script.js"></script>
-
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      margin-top: 50px;
-    }
-    button {
-      padding: 10px 15px;
-      font-size: 1rem;
-      margin: 10px;
-    }
-    #winner {
-      margin-top: 30px;
-      color: green;
-      font-weight: bold;
-    }
-    #debug {
-      margin-top: 20px;
-      text-align: left;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
-      font-size: 0.9rem;
-      color: #555;
-      white-space: pre-wrap;
-      background: #f9f9f9;
-      padding: 10px;
-      border-radius: 4px;
-      border: 1px solid #ddd;
-    }
-  </style>
-</head>
-<body>
-  <h1>🎮 Gamer Rave Giveaway v2</h1>
-  <button onclick="loadEntries()">Load Entries</button>
-  <button onclick="pickWinner()">Pick a Winner</button>
-  <h2 id="winner">No winner yet</h2>
-
-  <div id="debug"></div>
-</body>
-</html> -->
