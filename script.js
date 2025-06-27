@@ -30,3 +30,16 @@ async function loadEntries() {
     alert("Failed to load the spreadsheet.");
   }
 }
+
+function pickWinner() {
+  if (validEntries.length === 0) {
+    alert("No valid entries loaded. Please click 'Load Entries' first.");
+    return;
+  }
+
+  const winner = validEntries[Math.floor(Math.random() * validEntries.length)];
+  const name = winner["Name"] || "Unnamed";
+  const email = winner["Email Address"] || "No Email";
+
+  document.getElementById("winner").innerText = `🎉 Winner: ${name} (${email})`;
+}
