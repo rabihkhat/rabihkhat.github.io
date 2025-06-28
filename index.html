@@ -69,7 +69,7 @@
         }
 
         validEntries = parsed.data.filter(r =>
-          r["Are you a DJ, Vendor or Performer at Gamer Rave?"] !== "Yes"
+          r["Are you on the guest list for Gamer Rave? (DJ, Vendor, Performer, Plus-One etc.)"] !== "Yes"
         );
 
         alert(`Loaded ${validEntries.length} valid guest entries.`);
