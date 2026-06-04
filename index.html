@@ -53,7 +53,7 @@
     let validEntries = [];
 
     async function loadEntries() {
-      const CSV_URL = "https://docs.google.com/spreadsheets/d/1s9azP6lDiiSiXIREjCm-BhG8B7hZkk5CdqOu36er9Kw/export?format=csv&gid=1437669261";
+      const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRj0yrXpnSGjteWybJAiv71i2elpcmv9L1iZOGA1XSxkuKNFiQw6QesxMPBULWyZzX3zc4NhGu2fLmn/pub?gid=1437669261&single=true&output=csv";
       try {
         const resp = await fetch(CSV_URL);
         const text = await resp.text();
